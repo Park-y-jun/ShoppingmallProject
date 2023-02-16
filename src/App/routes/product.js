@@ -20,25 +20,22 @@ router.get("/:index/comments", async (req, res) => {
   res.json(product.comments);
 });
 
-router.post(
-  "/:index/comments",
-  asyncHandler(async (req, res) => {
-    const { index } = req.params;
-    const { content } = req.body;
-    const author = await User.findOne({ index: req.user.userid });
+router.post("/:index/comments", async (req, res) => {
+  const { index } = req.params;
+  const { rate, content } = req.body;
+  const author = await User.findOne({ index: req.user.userid });
 
-    // $push operator 사용하여 댓글 추가하기
-    await Product.updateOne(
-      {
-        userid,
-      },
-      {
-        $push: { comments: { content, author } },
-      }
-    );
+  // $push operator 사용하여 댓글 추가하기
+  await Product.updateOne(
+    {
+      userid,
+    },
+    {
+      $push: { comments: { rate, content, author } },
+    }
+  );
 
-    res.json({ result: "success" });
-  })
-);
+  res.json({ result: "success" });
+});
 
 module.exports = router;
