@@ -7,7 +7,8 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 router.get("/", (req, res) => {
-  res.send(User.name); // 질문: 왜 reference.error가 날까요
+  console.log(User);
+  res.send("Hello World");
 });
 //
 router.post("/", userController.createUser);

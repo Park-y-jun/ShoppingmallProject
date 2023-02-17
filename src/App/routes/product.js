@@ -7,35 +7,37 @@ router.get("/", (req, res) => {
   res.send("product page");
 });
 // 상품 상세로 들어가기
-router.get("/:index", async (req, res) => {
-  const { index } = req.params;
-  const product = await Product.findOne({ index });
-  res.send("index product 상세 페이지");
+router.get("/:id", async (req, res) => {
+  console.log(req);
+  const { id } = req.params;
+  console.log(id);
+  const product = await Product.findOne({ id });
+  res.send(product);
 });
 
-router.get("/:index/comments", async (req, res) => {
-  const { index } = req.params;
-  const product = await Product.findOne({ index });
+router.get("/:id/comments", async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findOne({ id });
   await User.populate(product.comments, { path: "author" });
   res.json(product.comments);
 });
 
-router.post("/:index/comments", async (req, res) => {
-  const { index } = req.params;
-  const { rate, content } = req.body;
-  const author = await User.findOne({ index: req.user.userid });
+// router.post("/:id/comments", async (req, res) => {
+//   const { id } = req.params;
+//   const { rate, content } = req.body;
+//   const author = await User.findOne({ id: req.user.id });
 
-  // $push operator 사용하여 댓글 추가하기
-  await Product.updateOne(
-    {
-      userid,
-    },
-    {
-      $push: { comments: { rate, content, author } },
-    }
-  );
+//   // $push operator 사용하여 댓글 추가하기
+//   await Product.updateOne(
+//     {
+//       id,
+//     },
+//     {
+//       $push: { comments: { rate, content, author } },
+//     }
+//   );
 
-  res.json({ result: "success" });
-});
+//   res.json({ result: "success" });
+// });
 
 module.exports = router;

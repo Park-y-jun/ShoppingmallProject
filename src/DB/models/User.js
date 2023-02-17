@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
-    userid: {
+    id: {
       // 댓글 작성 할 때 필요
       type: String,
       required: true,

@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const OptionSchema = require("./option");
-const CommentSchema = require("./comment");
 
 const ProductSchema = new Schema({
-  index: {
+  id: {
     type: Number,
     required: true,
   },
@@ -20,8 +18,12 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
-  option: [OptionSchema],
-  comments: [CommentSchema],
+  comments: {
+    type: Schema.Types.ObjectId,
+    ref: "Option",
+    required: true,
+  },
+  // option: [option],
 });
 
 const Product = mongoose.model("Product", ProductSchema);
