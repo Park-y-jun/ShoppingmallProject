@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
+    id: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -24,9 +28,8 @@ const userSchema = new Schema(
       type: Number,
       required: true,
     },
-    role: {
-      type: Number,
-      default: 0,
+    token: {
+      type: String,
     },
   },
   { timestamps: true }
