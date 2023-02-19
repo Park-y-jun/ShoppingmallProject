@@ -23,7 +23,7 @@ const ProductSchema = new Schema({
     ref: "Option",
     required: true,
   },
-  // option: [option],
+  option: [option],
 });
 
 const Product = mongoose.model("Product", ProductSchema);
