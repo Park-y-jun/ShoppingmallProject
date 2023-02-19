@@ -1,12 +1,29 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
-const ProductSchema = new Schema({
-  id: {
-    type: Number,
+const optionSchema = new Schema({
+  name: {
+    type: String,
     required: true,
   },
-  admin: {
+  values: [
+    {
+      type: String,
+    },
+  ],
+});
+
+const productSchema = new Schema({
+  id: {
+    type: Number,
+    unique: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
     type: String,
     required: true,
   },
@@ -14,18 +31,23 @@ const ProductSchema = new Schema({
     type: Number,
     required: true,
   },
-  information: {
+  category: {
     type: String,
     required: true,
   },
-  comments: {
-    type: Schema.Types.ObjectId,
-    ref: "Option",
-    required: true,
+  option: [optionSchema],
+  created: {
+    type: Date,
+    default: Date.now,
   },
-  option: [option],
+  updated: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const Product = mongoose.model("Product", ProductSchema);
+productSchema.plugin(AutoIncrement, { inc_field: "id" });
+
+const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;
