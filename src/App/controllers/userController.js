@@ -35,21 +35,25 @@ const loginUser = async (req, res) => {
       const comparePassword = await bcrypt.compare(password, user.password);
       if (comparePassword) {
         //jwt 토큰 생성
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SIGN);
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SIGN, {
+          expiresIn: "1h",
+        });
 
-        const userResult = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          password: user.password,
-          address: user.address,
-          phone: user.phone,
-          token: token,
-        };
-        res.cookie("auth", userResult.token).status(200).json({
+        // const userResult = {
+        //   id: user.id,
+        //   name: user.name,
+        //   email: user.email,
+        //   password: user.password,
+        //   address: user.address,
+        //   phone: user.phone,
+        //   token: token,
+        // };
+        res.cookie("auth", token, {
+          httpOnly: true,
+        });
+        res.status(200).json({
           success: true,
           msg: "He is our user",
-          data: userResult,
         });
       } else {
         res.status(401).json({ success: false, msg: "He is not our user" });
@@ -60,7 +64,27 @@ const loginUser = async (req, res) => {
   }
 };
 
+//유저 로그아웃
+
+const logoutUser = async (req, res) => {
+  try {
+    const logout = await User.findOneAndUpdate(
+      { id: req.user.id },
+      { token: "" }
+    );
+    res.clearCookie("auth");
+    if (logout) {
+      res.status(200).json({ success: true, msg: "logout success" });
+    } else {
+      res.status(401).json({ success: false, msg: "logout fail" });
+    }
+  } catch (error) {
+    res.status(404).json({ success: false, msg: error.message });
+  }
+};
+
 module.exports = {
   createUser,
   loginUser,
+  logoutUser,
 };
