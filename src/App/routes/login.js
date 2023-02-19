@@ -14,6 +14,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", userController.loginUser);
+
 router.get("/auth", authToken, (req, res) => {
   res.status(200).json({
     id: req.user.id,

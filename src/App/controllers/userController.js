@@ -39,15 +39,7 @@ const loginUser = async (req, res) => {
           expiresIn: "1h",
         });
 
-        // const userResult = {
-        //   id: user.id,
-        //   name: user.name,
-        //   email: user.email,
-        //   password: user.password,
-        //   address: user.address,
-        //   phone: user.phone,
-        //   token: token,
-        // };
+        //jwt 토큰을 쿠키에 저장
         res.cookie("auth", token, {
           httpOnly: true,
         });
