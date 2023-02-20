@@ -6,7 +6,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // 리스트 가져오기
-router.get("/", async (req, res) => {
+router.get("/product", async (req, res) => {
   try {
     const products = await Product.find();
     res.json(products);
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // 상품 상세
-router.get("/:product_id", async (req, res) => {
+router.get("/product/:product_id", async (req, res) => {
   const product_id = req.params.product_id;
   try {
     const product = await Product.findOne({ product_id: product_id });
@@ -31,7 +31,7 @@ router.get("/:product_id", async (req, res) => {
 });
 
 // 상품 등록
-router.post("/", async (req, res) => {
+router.post("/product", async (req, res) => {
   const { name, description, price, option, category } = req.body;
   try {
     if (!name || !description || !price) {
@@ -44,24 +44,23 @@ router.post("/", async (req, res) => {
       option,
       category,
     });
-    res.redirect(`/product/${product.id}`);
+    res.json(product);
   } catch (e) {
     res.status(400).json({ message: e.message });
   }
 });
 
 // 상품 수정
-router.post("/:product_id", async (req, res) => {
+router.post("/product/:product_id", async (req, res) => {
   const id = req.params;
-  const { product_id, name, description, price, option } = req.body;
+  const { name, description, price, option } = req.body;
   try {
-    if (!product_id || !name || !description || !price) {
+    if (!name || !description || !price) {
       res.status(400).json({ message: "필수항목을 전부 작성하세요." });
     }
     const product = await Product.updateOne(
       { id },
       {
-        product_id,
         name,
         description,
         price,
@@ -75,7 +74,7 @@ router.post("/:product_id", async (req, res) => {
 });
 
 // 상품삭제
-router.delete("/:product_id", async (req, res) => {
+router.delete("/product/:product_id", async (req, res) => {
   const product_id = req.params.product_id;
   await Product.deleteOne({ product_id });
   res.send("OK");

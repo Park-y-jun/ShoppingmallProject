@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const refundSchema = new Schema(
+const RefundSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -30,6 +30,6 @@ const refundSchema = new Schema(
   { timestamps: true }
 );
 
-const Refund = mongoose.model("Refund", refundSchema);
+const Refund = mongoose.model("Refund", RefundSchema);
 
 module.exports = Refund;
