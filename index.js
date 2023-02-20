@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const registerRouter = require("./src/App/routes/register");
 const productRouter = require("./src/App/routes/product");
+const adminRouter = require("./src/App/routes/admin");
 require("dotenv").config();
 const PORT = 8000;
 
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 
 app.use("/register", registerRouter);
 app.use("/product", productRouter);
+app.use("/admin", adminRouter);
 
 app.listen(PORT, () => {
   console.log("서버가 8000포트에서 실행중입니다");

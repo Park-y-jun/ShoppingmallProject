@@ -31,7 +31,6 @@ const userSchema = new Schema(
     },
     user_id: {
       type: Number,
-      required: true,
     },
   },
   { timestamps: true }

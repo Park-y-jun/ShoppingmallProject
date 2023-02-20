@@ -2,7 +2,7 @@ const express = require("express");
 const userController = require("../controllers/userController");
 const router = express.Router();
 const bodyParser = require("body-parser");
-const User = require("../../DB/models/user");
+const User = require("../../DB/models/user/user");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
