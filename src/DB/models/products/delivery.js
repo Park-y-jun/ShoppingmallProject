@@ -21,6 +21,9 @@ const deliverySchema = new Schema({
       required: true,
     },
   },
+  demand: {
+    type: String,
+  },
   status: {
     type: String,
     enum: ["Preparing", "In Transit", "Delivered"],

@@ -1,6 +1,6 @@
 const express = require("express");
 const Product = require("../../DB/models/products/product");
-const User = require("../../DB/models/user");
+const User = require("../../DB/models/user/user");
 const router = express.Router();
 // 상품 리스트 보이기
 router.get("/", (req, res) => {

@@ -1,26 +1,30 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
-const User = require("../DB/models/user/user");
-
+const userController = require("../controllers/userController");
 const router = express.Router();
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const authToken = require("../middleware/auth");
 
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(cookieParser());
 
-  if (!user) {
-    return res.status(400).json({ message: "이메일을 확인해주세요." });
-  }
-
-  const passwordMatch = await bcrypt.compare(password, user.password);
-
-  if (!passwordMatch) {
-    return res.status(400).json({ message: "비밀번호가 다릅니다." });
-  }
-
-  const accessToken = "your_access_token"; // 토큰 생성
-
-  res.status(200).json({ message: "로그인 성공!", accessToken });
+router.get("/", (req, res) => {
+  res.send("Login page");
 });
+
+router.post("/", userController.loginUser);
+
+router.get("/auth", authToken, (req, res) => {
+  res.status(200).json({
+    name: req.user.name,
+    email: req.user.email,
+    phone: req.user.phone,
+    address: req.user.address,
+    role: req.user.role,
+    user_id: req.user.user_id,
+  });
+});
+router.get("/logout", authToken, userController.logoutUser);
 
 module.exports = router;
