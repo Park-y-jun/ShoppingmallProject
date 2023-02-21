@@ -1,6 +1,8 @@
-// auth 미들웨어 구현중
+// jwt 토큰을 디코드 하여서 거기에 맞는 유저정보 불러옴
+
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const User = require("../../DB/models/user/User");
 
 const authToken = async (req, res, next) => {
   const token = req.cookies.auth;
@@ -12,8 +14,10 @@ const authToken = async (req, res, next) => {
     });
   }
   try {
-    const decodedUser = jwt.verify(token, process.env.JWT_SIGN);
-    req.user = decodedUser;
+    const verifyUser = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ email: verifyUser.email });
+    req.user = user;
+
     next();
   } catch (err) {
     res.status(400).json({

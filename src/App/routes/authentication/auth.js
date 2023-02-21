@@ -1,31 +1,27 @@
 const express = require("express");
-const userController = require("../controllers/userController");
+
 const router = express.Router();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const authToken = require("../middleware/auth");
+const authToken = require("../../middleware/auth");
+const errorHandler = require("../../middleware/errorHandler");
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(cookieParser());
 
-router.get("/", (req, res) => {
-  res.send("Login page");
-});
+router.use(errorHandler);
 
-router.post("/", userController.loginUser);
-
-router.get("/auth", authToken, (req, res) => {
+router.get("/", authToken, (req, res) => {
   res.status(200).json({
-    id: req.user.id,
-    isAdmin: req.user.role === 0 ? false : true,
-    name: req.user.name,
     email: req.user.email,
+    user_id: req.user.user_id,
+    isAdmin: req.user.role === "admin" ? true : false,
+    name: req.user.name,
     address: req.user.address,
     phone: req.user.phone,
     role: req.user.role,
   });
 });
-router.get("/logout", authToken, userController.logoutUser);
 
 module.exports = router;

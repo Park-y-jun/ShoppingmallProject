@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
-    id: {
+    email: {
       type: String,
       required: true,
     },
@@ -12,10 +12,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    email: {
-      type: String,
-      required: true,
-    },
+
     password: {
       type: String,
       required: true,
@@ -28,15 +25,21 @@ const userSchema = new Schema(
       type: Number,
       required: true,
     },
-    token: {
-      type: String,
-    },
+    // token: {
+    //   type: String,
+    // },
     role: {
-      type: Number,
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
+
+    user_id: Number,
   },
   { timestamps: true }
 );
+
+userSchema.plugin(AutoIncrement, { inc_field: "user_id" });
 
 const User = mongoose.model("User", userSchema);
 
