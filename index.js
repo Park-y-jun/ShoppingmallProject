@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/register", registerRouter);
-app.use("/product", productRouter);
+app.use("/", productRouter);
 app.use("/admin", adminRouter);
 
 app.listen(PORT, () => {

@@ -15,19 +15,9 @@ router.get("/product", async (req, res) => {
   }
 });
 
-router.get("/product/:category", async (req, res) => {
-  const { category } = req.params;
-  try {
-    const products = await Product.find({ category_id: category });
-    res.json(products);
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
-
 // 상품 상세
-router.get("/product/:category/:product_id", async (req, res) => {
-  const { category, product_id } = req.params;
+router.get("/product/:product_id", async (req, res) => {
+  const { product_id } = req.params;
   try {
     const product = await Product.findOne({
       category: category,
@@ -64,8 +54,8 @@ router.post("/product", async (req, res) => {
 });
 
 // 상품 수정
-router.post("/product/:category/:product_id", async (req, res) => {
-  const { category, product_id } = req.params;
+router.post("/product/:product_id", async (req, res) => {
+  const { product_id } = req.params;
   const { name, description, price, option } = req.body;
   try {
     if (!name || !description || !price) {
@@ -80,16 +70,16 @@ router.post("/product/:category/:product_id", async (req, res) => {
         option,
       }
     );
-    res.redirect(`/product/${category}/${product_id}`);
+    res.redirect(`/product/${product_id}`);
   } catch (e) {
     res.status(400).json({ message: e.message });
   }
 });
 
 // 상품삭제
-router.delete("/product/:category/:product_id", async (req, res) => {
-  const { category, product_id } = req.params;
-  await Product.deleteOne({ category_id: category, name: product_id });
+router.delete("/product/:product_id", async (req, res) => {
+  const { product_id } = req.params;
+  await Product.deleteOne({ product_id: product_id });
   res.send("OK");
 });
 
