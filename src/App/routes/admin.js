@@ -15,11 +15,24 @@ router.get("/product", async (req, res) => {
   }
 });
 
-// 상품 상세
-router.get("/product/:product_id", async (req, res) => {
-  const product_id = req.params.product_id;
+router.get("/product/:category", async (req, res) => {
+  const { category } = req.params;
   try {
-    const product = await Product.findOne({ product_id: product_id });
+    const products = await Product.find({ category_id: category });
+    res.json(products);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+});
+
+// 상품 상세
+router.get("/product/:category/:product_id", async (req, res) => {
+  const { category, product_id } = req.params;
+  try {
+    const product = await Product.findOne({
+      category: category,
+      product_id: product_id,
+    });
     if (!product) {
       res.status(400).json({ message: "상품이 없습니다." });
     } else {
@@ -51,15 +64,15 @@ router.post("/product", async (req, res) => {
 });
 
 // 상품 수정
-router.post("/product/:product_id", async (req, res) => {
-  const id = req.params;
+router.post("/product/:category/:product_id", async (req, res) => {
+  const { category, product_id } = req.params;
   const { name, description, price, option } = req.body;
   try {
     if (!name || !description || !price) {
       res.status(400).json({ message: "필수항목을 전부 작성하세요." });
     }
-    const product = await Product.updateOne(
-      { id },
+    await Product.updateOne(
+      { category: category, product_id: product_id },
       {
         name,
         description,
@@ -67,16 +80,16 @@ router.post("/product/:product_id", async (req, res) => {
         option,
       }
     );
-    res.redirect(`/product/${product.id}`);
+    res.redirect(`/product/${category}/${product_id}`);
   } catch (e) {
     res.status(400).json({ message: e.message });
   }
 });
 
 // 상품삭제
-router.delete("/product/:product_id", async (req, res) => {
-  const product_id = req.params.product_id;
-  await Product.deleteOne({ product_id });
+router.delete("/product/:category/:product_id", async (req, res) => {
+  const { category, product_id } = req.params;
+  await Product.deleteOne({ category_id: category, name: product_id });
   res.send("OK");
 });
 
