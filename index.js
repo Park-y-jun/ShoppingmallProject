@@ -26,16 +26,23 @@ const registerRouter = require("./src/App/routes/authentication/register");
 const loginRouter = require("./src/App/routes/authentication/login");
 const logoutRouter = require("./src/App/routes/authentication/logout");
 const authRouter = require("./src/App/routes/authentication/auth");
+app.use("/register", registerRouter);
+app.use("/login", loginRouter);
+app.use("/logout", logoutRouter);
+app.use("/authPage", authRouter);
 
 // 회원, 비회원, 관리자, 판매자
 
 const userProfileRouter = require("./src/App/routes/users/profile");
 
-app.use("/register", registerRouter);
-app.use("/login", loginRouter);
-app.use("/logout", logoutRouter);
-app.use("/authPage", authRouter);
+const adminRouter = require("./src/App/routes/admin");
+
 app.use("/userProfile", userProfileRouter);
+app.use("/admin", adminRouter);
+
+//제품
+const productRouter = require("./src/App/routes/product");
+app.use("/product", productRouter);
 
 // 8000포트로 서버 실행
 app.listen(8000, () => {
