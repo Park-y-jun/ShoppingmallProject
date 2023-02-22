@@ -8,23 +8,28 @@ const orderSchema = new Schema(
       ref: "User",
       required: true,
     },
-    products: [
-      {
-        product: {
-          type: Schema.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+    // products: [
+    //   {
+    //     product: {
+    //       type: Schema.Types.ObjectId,
+    //       ref: "Product",
+    //       required: true,
+    //     },
+    //     quantity: {
+    //       type: Number,
+    //       required: true,
+    //     },
+    //     price: {
+    //       type: Number,
+    //       required: true,
+    //     },
+    //   },
+    // ],
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
     status: {
       type: String,
       enum: ["pending", "orderd", "shipped", "delivered"],

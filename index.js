@@ -31,11 +31,16 @@ const authRouter = require("./src/App/routes/authentication/auth");
 
 const userProfileRouter = require("./src/App/routes/users/profile");
 
+//배송
+
+const orderRouter = require("./src/App/routes/order/order");
+
 app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/authPage", authRouter);
 app.use("/userProfile", userProfileRouter);
+app.use("/order", orderRouter);
 
 // 8000포트로 서버 실행
 app.listen(8000, () => {
