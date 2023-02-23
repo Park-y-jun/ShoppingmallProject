@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const registerRouter = require("./src/App/routes/register");
@@ -5,6 +7,10 @@ const productRouter = require("./src/App/routes/product");
 const adminRouter = require("./src/App/routes/admin");
 require("dotenv").config();
 const PORT = 8000;
+
+const cors = require("cors");
+
+app.use(cors({ origin: "http://localhost:3000" }));
 
 const mongoose = require("mongoose");
 mongoose
@@ -19,11 +25,31 @@ mongoose
 app.get("/", (req, res) => {
   res.send("hello");
 });
-
+//라우터
+//login/authentication
+const registerRouter = require("./src/App/routes/authentication/register");
+const loginRouter = require("./src/App/routes/authentication/login");
+const logoutRouter = require("./src/App/routes/authentication/logout");
+const authRouter = require("./src/App/routes/authentication/auth");
 app.use("/register", registerRouter);
-app.use("/", productRouter);
+app.use("/login", loginRouter);
+app.use("/logout", logoutRouter);
+app.use("/authPage", authRouter);
+
+// 회원, 비회원, 관리자, 판매자
+
+const userProfileRouter = require("./src/App/routes/users/profile");
+
+const adminRouter = require("./src/App/routes/admin");
+
+app.use("/userProfile", userProfileRouter);
 app.use("/admin", adminRouter);
 
-app.listen(PORT, () => {
+//제품
+const productRouter = require("./src/App/routes/product");
+app.use("/product", productRouter);
+
+// 8000포트로 서버 실행
+app.listen(8000, () => {
   console.log("서버가 8000포트에서 실행중입니다");
 });

@@ -20,7 +20,6 @@ router.get("/product/:product_id", async (req, res) => {
   const { product_id } = req.params;
   try {
     const product = await Product.findOne({
-      category: category,
       product_id: product_id,
     });
     if (!product) {
@@ -62,7 +61,7 @@ router.post("/product/:product_id", async (req, res) => {
       res.status(400).json({ message: "필수항목을 전부 작성하세요." });
     }
     await Product.updateOne(
-      { category: category, product_id: product_id },
+      { product_id: product_id },
       {
         name,
         description,

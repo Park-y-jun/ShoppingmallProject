@@ -26,10 +26,6 @@ const productSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Option",
     },
-    image: {
-      type: String,
-      required: true,
-    },
   },
   { timestamps: true }
 );
