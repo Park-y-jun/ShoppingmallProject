@@ -2,18 +2,21 @@ const express = require("express");
 const router = express.Router();
 const Order = require("../../DB/models/products/order");
 const Delivery = require("../../DB/models/products/delivery");
+const Product = require("../../DB/models/products/product");
+const { findByIdAndUpdate } = require("../../DB/models/products/order");
 
 router.get("/order", (req, res) => {
   res.render("order page");
 });
 
 router.post("/order", async (req, res) => {
-  const { user, products, total } = req.body;
+  const { user, product, quantity, price } = req.body;
   try {
     await Order.create({
       user,
-      products,
-      total,
+      product,
+      quantity,
+      price,
     });
     res.redirect("/order/delivery");
   } catch (e) {
@@ -21,8 +24,10 @@ router.post("/order", async (req, res) => {
   }
 });
 
-router.get("/order/delivery", (req, res) => {
-  res.render("delivery page");
+router.get("/order/delivery", async (req, res) => {
+  const { user_id } = req.params;
+  const products = await Product.find({ user_id: user_id });
+  res.json(products);
 });
 
 router.post("/order/delivery", async (req, res) => {
@@ -34,6 +39,21 @@ router.post("/order/delivery", async (req, res) => {
       contact,
       demand,
     });
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+});
+
+router.put("/order/delivery/:delivery_id", async (req, res) => {
+  const { delivery_id } = req.params;
+  const { paid } = req.body;
+  try {
+    const updateProducts = await findByIdAndUpdate(
+      delivery_id,
+      { paid: true },
+      { new: true }
+    );
+    res.json(updateProducts);
   } catch (e) {
     res.status(400).json({ message: e.message });
   }

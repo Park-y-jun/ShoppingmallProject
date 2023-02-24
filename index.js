@@ -5,6 +5,7 @@ const app = express();
 const registerRouter = require("./src/App/routes/register");
 const productRouter = require("./src/App/routes/product");
 const adminRouter = require("./src/App/routes/admin");
+const orderRouter = require("./src/App/routes/order");
 require("dotenv").config();
 const PORT = 8000;
 
@@ -35,6 +36,7 @@ app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/authPage", authRouter);
+app.use("/user/:user_id", orderRouter);
 
 // 회원, 비회원, 관리자, 판매자
 
