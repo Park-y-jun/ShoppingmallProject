@@ -3,9 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
-require("dotenv").config();
-const PORT = 8000;
-
 const cors = require("cors");
 
 app.use(cors({ origin: "http://localhost:3000" }));
@@ -33,6 +30,7 @@ app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/authPage", authRouter);
+app.use("/user/:user_id", orderRouter);
 
 // 회원, 비회원, 관리자, 판매자
 
