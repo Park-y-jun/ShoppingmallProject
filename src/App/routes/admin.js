@@ -25,7 +25,7 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 router.get("/product", async (req, res) => {
   try {
     const products = await Product.find();
-    res.json(products);
+    res.status(200).json(products);
   } catch (e) {
     res.status(400).json({ message: e.message });
   }

@@ -2,9 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
-const registerRouter = require("./src/App/routes/register");
-const productRouter = require("./src/App/routes/product");
-const adminRouter = require("./src/App/routes/admin");
+
 require("dotenv").config();
 const PORT = 8000;
 

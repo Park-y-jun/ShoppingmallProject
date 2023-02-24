@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+// const mongoose = require("mongoose");
+// const Schema = mongoose.Schema;
 
-const categorySchema = new Schema({});
+// const categorySchema = new Schema({});
 
-const Category = mongoose.model("Category", categorySchema);
+// const Category = mongoose.model("Category", categorySchema);
 
-module.exports = Category;
+// module.exports = Category;

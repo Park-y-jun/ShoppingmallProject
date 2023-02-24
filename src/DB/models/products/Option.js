@@ -6,11 +6,9 @@ const optionSchema = new Schema({
     type: String,
     required: true,
   },
-  values: [
-    {
-      type: String,
-    },
-  ],
+  values: {
+    type: String,
+  },
 });
 
 const Option = mongoose.model("Option", optionSchema);
