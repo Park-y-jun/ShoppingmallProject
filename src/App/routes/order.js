@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const errorHandler = require("../../middleware/errorHandler");
 const Order = require("../../DB/models/products/order");
 const Delivery = require("../../DB/models/products/delivery");
-
+router.use(errorHandler);
 router.get("/order", (req, res) => {
   res.render("order page");
 });
@@ -38,5 +39,7 @@ router.post("/order/delivery", async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 });
+
+router.post("/order");
 
 module.exports = router;
