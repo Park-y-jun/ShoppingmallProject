@@ -19,7 +19,9 @@ const loginUser = tryCatch(async (req, res) => {
 
       //jwt 토큰을 쿠키에 저장
       res.cookie("auth", token, {
-        secure: false,
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
       });
       res.status(200).json({
         success: true,
