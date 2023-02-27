@@ -9,7 +9,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require("cors");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 const mongoose = require("mongoose");
 mongoose
