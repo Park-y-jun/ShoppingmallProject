@@ -88,6 +88,7 @@ router.post("/product", async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
+      category: req.body.category,
     });
     await product.save();
     res.status(200).json({ message: "상품이 등록되었습니다." });
