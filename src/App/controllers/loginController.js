@@ -14,12 +14,12 @@ const loginUser = tryCatch(async (req, res) => {
     if (comparePassword) {
       //jwt 토큰 생성
       const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
+        expiresIn: "1d",
       });
 
       //jwt 토큰을 쿠키에 저장
       res.cookie("auth", token, {
-        httpOnly: true,
+        secure: false,
       });
       res.status(200).json({
         success: true,
