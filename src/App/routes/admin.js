@@ -59,7 +59,7 @@ router.get("/product/:product_id", async (req, res) => {
   }
 });
 
-// 상품 등록
+//상품 등록
 router.post("/product", upload.single("image"), async (req, res) => {
   try {
     const image = req.file;
@@ -81,7 +81,22 @@ router.post("/product", upload.single("image"), async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 });
-
+// router.post("/product", async (req, res) => {
+//   try {
+//     const image = req.file;
+//     console.log(image);
+//     const product = new Product({
+//       name: req.body.name,
+//       description: req.body.description,
+//       price: req.body.price,
+//       category: req.body.category,
+//     });
+//     await product.save();
+//     res.status(200).json({ message: "상품이 등록되었습니다." });
+//   } catch (e) {
+//     res.status(400).json({ message: e.message });
+//   }
+// });
 //상품 수정
 router.post(
   "/product/:product_id",

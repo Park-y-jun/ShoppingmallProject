@@ -14,16 +14,17 @@ const loginUser = tryCatch(async (req, res) => {
     if (comparePassword) {
       //jwt 토큰 생성
       const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
+        expiresIn: "1d",
       });
 
       //jwt 토큰을 쿠키에 저장
-      res.cookie("auth", token, {
-        httpOnly: true,
-      });
+      // res.cookie("auth", token, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   sameSite: "none",
+      // });
       res.status(200).json({
-        success: true,
-        msg: "He is our user",
+        token,
       });
     } else {
       throw new AppError("비밀번호가 일치하지 않습니다.", 401);

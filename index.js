@@ -2,10 +2,19 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require("cors");
 
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 const mongoose = require("mongoose");
 mongoose
@@ -49,6 +58,6 @@ const orderRouter = require("./src/App/routes/order");
 app.use("/user/:user_id", orderRouter);
 
 // 8000포트로 서버 실행
-app.listen(8000, () => {
-  console.log("서버가 8000포트에서 실행중입니다");
+app.listen(process.env.PORT, () => {
+  console.log("서버가 5000포트에서 실행중입니다");
 });
