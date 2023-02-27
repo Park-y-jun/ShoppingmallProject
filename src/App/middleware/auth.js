@@ -1,3 +1,9 @@
+// jwt 토큰을 디코드 하여서 거기에 맞는 유저정보 불러옴
+
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+const User = require("../../DB/models/user/User");
+
 const authToken = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
