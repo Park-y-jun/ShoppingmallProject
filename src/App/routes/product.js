@@ -19,11 +19,7 @@ router.get("/:product_id", async (req, res) => {
   const { product_id } = req.params;
   try {
     const product = await Product.findOne({ product_id: product_id });
-    if (!product) {
-      res.status(400).json({ message: "상품이 없습니다." });
-    } else {
-      res.json(product);
-    }
+    res.status(200).json(product);
   } catch (e) {
     res.status(400).json({ message: e.message });
   }

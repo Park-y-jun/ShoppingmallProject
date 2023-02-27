@@ -1,7 +1,8 @@
 const express = require("express");
 const multer = require("multer");
 const router = express.Router();
-const Product = require("../../DB/models/products/product");
+const Product = require("../../DB/models/products/Product");
+const Category = require("../../DB/models/products/Category");
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -117,11 +118,81 @@ router.post(
   }
 );
 
+router.post(
+  "/product/:product_id",
+  upload.single("image"),
+  async (req, res) => {
+    const { name, description, price, category } = req.body;
+
+    try {
+      // 업데이트할 제품 찾기
+      const product = await Product.findOne({
+        product_id: req.params.product_id,
+      });
+
+      // 이미지가 업로드된 경우 처리
+      if (req.file) {
+        product.image.data = req.file.buffer;
+        product.image.contentType = req.file.mimetype;
+      }
+
+      // 제품 정보 업데이트
+      product.name = name;
+      product.description = description;
+      product.price = price;
+      product.category = category;
+
+      // 제품 정보 저장
+      await product.save();
+
+      // 업데이트된 제품 반환
+      res.json(product);
+    } catch (e) {
+      res.status(400).json({ message: e.message });
+    }
+  }
+);
+
 // 상품삭제
 router.delete("/product/:product_id", async (req, res) => {
   const { product_id } = req.params;
   await Product.deleteOne({ product_id: product_id });
   res.send("OK");
+});
+
+//카테고리 추가
+router.post("/category", async (req, res) => {
+  try {
+    const category = new Category({
+      category: req.body.category,
+    });
+    await category.save();
+    res.status(200).json({ message: "카테고리가 추가되었습니다." });
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+});
+
+//카테고리 수정
+router.post("/category/:category", async (req, res) => {
+  const { category } = req.params;
+  try {
+    const updateCategory = await Category.findOne({
+      category: category,
+    });
+    updateCategory.category = category;
+    await updateCategory.save();
+    res.status(200).json({ message: "카테고리가 수정되었습니다." });
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+});
+
+//카테고리 삭제
+router.delete("/category/:cateogyr", async (req, res) => {
+  const { category } = req.params;
+  await Category.deleteOne({ category: category });
+  res.send("DELETE");
 });
 
 module.exports = router;
