@@ -1,10 +1,6 @@
-require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const User = require("../../DB/models/user/User");
-
 const authToken = async (req, res, next) => {
   try {
-    const token = req.body.token;
+    const token = req.headers.authorization;
 
     if (!token) {
       throw new Error("토큰이 없습니다.");
