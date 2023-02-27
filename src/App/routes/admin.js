@@ -204,7 +204,7 @@ router.post("/category/:category", async (req, res) => {
 });
 
 //카테고리 삭제
-router.delete("/category/:cateogyr", async (req, res) => {
+router.delete("/category/:cateogry", async (req, res) => {
   const { category } = req.params;
   await Category.deleteOne({ category: category });
   res.send("DELETE");
