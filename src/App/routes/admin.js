@@ -174,6 +174,24 @@ router.delete("/product/:product_id", async (req, res) => {
   await Product.deleteOne({ product_id: product_id });
   res.send("OK");
 });
+router.get("/product", async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.status(200).json(products);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+});
+
+//카테고리 리스트 조회
+router.get("/category", async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.status(200).json(categories);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+});
 
 //카테고리 추가
 router.post("/category", async (req, res) => {
