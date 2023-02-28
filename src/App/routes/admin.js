@@ -215,8 +215,9 @@ router.post("/category/:category", async (req, res) => {
       category: category,
     });
     updateCategory.category = category;
-    await updateCategory.save();
+    const result = await updateCategory.save();
     res.status(200).json({ message: "카테고리가 수정되었습니다." });
+    res.send(result);
   } catch (e) {
     res.status(400).json({ message: e.message });
   }
@@ -225,8 +226,8 @@ router.post("/category/:category", async (req, res) => {
 //카테고리 삭제
 router.delete("/category/:cateogry", async (req, res) => {
   const { category } = req.params;
-  await Category.deleteOne({ category: category });
-  res.send("DELETE");
+  const result = await Category.deleteOne({ category: category });
+  res.send(result);
 });
 
 module.exports = router;
