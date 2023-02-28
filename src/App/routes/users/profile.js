@@ -10,9 +10,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(errorHandler);
 // /userProfile
-router.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+router.get("/", userController.allUser);
 // /userProfile/:user_id
 
 router.get("/:user_id", userController.getUser);
@@ -20,6 +18,6 @@ router.get("/:user_id", userController.getUser);
 
 router.post("/:user_id/update", userController.updateUser);
 
-router.get("/:user_id/delete", userController.deleteUser);
+router.delete("/:user_id/delete", userController.deleteUser);
 
 module.exports = router;

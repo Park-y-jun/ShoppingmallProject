@@ -10,7 +10,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(cookieParser());
 
 router.get("/", (req, res) => {
-  res.send("Login page");
+  // res.send("Login page");
 });
 
 router.post("/", userController.loginUser);
