@@ -183,7 +183,7 @@ router.get("/category", async (req, res) => {
 router.post("/category", async (req, res) => {
   try {
     const category = new Category({
-      category: ObjectId(req.body.category),
+      category: req.body.category,
     });
     await category.save();
     res.status(200).json({ message: "카테고리가 추가되었습니다." });
@@ -194,7 +194,7 @@ router.post("/category", async (req, res) => {
 
 //카테고리 수정
 router.post("/category/:category", async (req, res) => {
-  const { category } = req.params;
+  const { category } = ObjectId(req.params);
   try {
     const updateCategory = await Category.findOne({
       category: category,
