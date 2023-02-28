@@ -3,6 +3,7 @@ const multer = require("multer");
 const router = express.Router();
 const Product = require("../../DB/models/products/Product");
 const Category = require("../../DB/models/products/Category");
+const ObjectId = mongoose.Types.ObjectId;
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -73,7 +74,7 @@ router.post("/product", upload.single("image"), async (req, res) => {
         data: image.buffer,
         contentType: image.mimetype,
       },
-      category: req.body.category,
+      category: ObjectId(req.body.category),
     });
     await product.save();
     res.status(200).json({ message: "상품이 등록되었습니다." });
@@ -208,7 +209,7 @@ router.post("/category", async (req, res) => {
 
 //카테고리 수정
 router.post("/category/:category", async (req, res) => {
-  const { category } = req.params;
+  const { category } = ObjectId(req.params);
   try {
     const updateCategory = await Category.findOne({
       category: category,
