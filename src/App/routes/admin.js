@@ -194,7 +194,7 @@ router.post("/category", async (req, res) => {
 
 //카테고리 수정
 router.post("/category/:category", async (req, res) => {
-  const { category } = ObjectId(req.params);
+  const { category } = req.params;
   try {
     const updateCategory = await Category.findOne({
       category: category,
