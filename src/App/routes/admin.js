@@ -183,7 +183,7 @@ router.get("/category", async (req, res) => {
 router.post("/category", async (req, res) => {
   try {
     const category = new Category({
-      category: req.body.category,
+      category: ObjectId(req.body.category),
     });
     await category.save();
     res.status(200).json({ message: "카테고리가 추가되었습니다." });
