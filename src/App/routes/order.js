@@ -6,8 +6,13 @@ const Delivery = require("../../DB/models/products/Delivery");
 const Product = require("../../DB/models/products/Product");
 const { findByIdAndUpdate } = require("../../DB/models/products/Order");
 //전체 주문 조회
-router.get("/order", (req, res) => {
-  res.render("order page");
+router.get("/order", async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.status(200).json(orders);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
 });
 // 새 주문
 router.post("/order", async (req, res) => {
@@ -51,7 +56,7 @@ router.put("/order/delivery/:delivery_id", async (req, res) => {
   try {
     const updateProducts = await findByIdAndUpdate(
       delivery_id,
-      { paid: true },
+      { paid },
       { new: true }
     );
     res.json(updateProducts);
