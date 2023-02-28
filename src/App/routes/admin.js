@@ -183,7 +183,7 @@ router.get("/category", async (req, res) => {
 router.post("/category", async (req, res) => {
   try {
     const category = new Category({
-      category: ObjectId(req.body.category),
+      category: req.body.category,
     });
     await category.save();
     res.status(200).json({ message: "카테고리가 추가되었습니다." });
@@ -195,12 +195,14 @@ router.post("/category", async (req, res) => {
 //카테고리 수정
 router.post("/category/:category", async (req, res) => {
   const { category } = req.params;
+  const name = req.body.category;
   try {
     const updateCategory = await Category.findOne({
       category: category,
     });
-    updateCategory.category = category;
+    updateCategory.category = name;
     await updateCategory.save();
+    // res.send(updateCategory);
     res.status(200).json({ message: "카테고리가 수정되었습니다." });
   } catch (e) {
     res.status(400).json({ message: e.message });
@@ -208,7 +210,7 @@ router.post("/category/:category", async (req, res) => {
 });
 
 //카테고리 삭제
-router.delete("/category/:cateogry", async (req, res) => {
+router.delete("/category/:category", async (req, res) => {
   const { category } = req.params;
   await Category.deleteOne({ category: category });
   res.send("DELETE");
