@@ -69,12 +69,11 @@ router.post("/product", upload.single("image"), async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
-
+      category: ObjectId(req.body.category),
       image: {
         data: image.buffer,
         contentType: image.mimetype,
       },
-      category: ObjectId(req.body.category),
     });
     await product.save();
     res.status(200).json({ message: "상품이 등록되었습니다." });
