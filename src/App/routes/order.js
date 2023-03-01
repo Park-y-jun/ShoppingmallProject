@@ -15,7 +15,7 @@ router.get("/order", async (req, res) => {
   }
 });
 // 새 주문
-router.post("/order", async (req, res) => {
+router.post("/", async (req, res) => {
   const { user, product, quantity, price } = req.body;
   try {
     await Order.create({
@@ -24,7 +24,8 @@ router.post("/order", async (req, res) => {
       quantity,
       price,
     });
-    res.redirect("/order/delivery");
+    // res.redirect("/order/delivery");
+    res.status(201).json({ message: "주문이 완료되었습니다." });
   } catch (e) {
     res.status(400).json({ message: e.message });
   }

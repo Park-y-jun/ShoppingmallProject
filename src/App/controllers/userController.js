@@ -22,8 +22,24 @@ const createUser = tryCatch(async (req, res, next) => {
   res.status(200).json({ success: true, msg: "createuser successfully" });
 });
 
+const allUser = tryCatch(async (req, res, next) => {
+  const allUser = await User.find({ deleted: false });
+  if (allUser) {
+    res.status(200).json({
+      success: true,
+      msg: "allUser success",
+      allUser,
+    });
+  } else {
+    res.status(404).json({ success: false, msg: "allUser not found" });
+  }
+});
+
 const getUser = tryCatch(async (req, res, next) => {
-  const userProfile = await User.findOne({ user_id: req.params.user_id });
+  const userProfile = await User.findOne({
+    user_id: req.params.user_id,
+    deleted: false,
+  });
   if (userProfile) {
     res.status(200).json({
       success: true,
@@ -37,7 +53,7 @@ const getUser = tryCatch(async (req, res, next) => {
 
 const updateUser = tryCatch(async (req, res, next) => {
   const updateUser = await User.findOneAndUpdate(
-    { user_id: req.params.user_id },
+    { user_id: req.params.user_id, deleted: false },
     {
       $set: {
         name: req.body.name,
@@ -54,14 +70,16 @@ const updateUser = tryCatch(async (req, res, next) => {
 });
 
 const deleteUser = tryCatch(async (req, res, next) => {
-  const deleteUser = await User.findOneAndDelete({
-    user_id: req.params.user_id,
+  const user = await User.findOne({
+    user_id: parseInt(req.params.user_id),
+    deleted: false,
   });
-  if (deleteUser) {
-    res.status(200).json({ success: true, msg: "deleteUser success" });
-  } else {
-    res.status(404).json({ success: false, msg: "deleteUser not found" });
+  if (user === null) {
+    return res.status(404).json({ message: "User not found" });
   }
+  user.deleted = true;
+  await user.save();
+  res.json({ message: "유저가 삭제 되었습니다" });
 });
 
 module.exports = {
@@ -69,4 +87,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  allUser,
 };
