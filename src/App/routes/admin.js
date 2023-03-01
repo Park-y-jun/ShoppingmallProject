@@ -4,6 +4,11 @@ const multer = require("multer");
 const router = express.Router();
 const Product = require("../../DB/models/products/Product");
 const Category = require("../../DB/models/products/Category");
+<<<<<<< HEAD
+=======
+const Order = require("../../DB/models/products/Order");
+const ObjectId = mongoose.Types.ObjectId;
+>>>>>>> c53f673a853b35a634429e414b25fa15a5aaf041
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -213,6 +218,17 @@ router.delete("/category/:category", async (req, res) => {
   const { category } = req.params;
   await Category.deleteOne({ category: category });
   res.send("DELETE");
+});
+
+// 관리자 주문 조회
+
+router.get("/order", async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.status(200).json(orders);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
 });
 
 module.exports = router;

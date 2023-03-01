@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+
 const app = express();
 const bodyParser = require("body-parser");
 
@@ -46,8 +47,11 @@ const userProfileRouter = require("./src/App/routes/users/profile");
 
 const adminRouter = require("./src/App/routes/admin");
 
+const guestRouter = require("./src/App/routes/users/guest");
+
 app.use("/userProfile", userProfileRouter);
 app.use("/admin", adminRouter);
+app.use("/guest", guestRouter);
 
 //제품
 const productRouter = require("./src/App/routes/product");
@@ -57,7 +61,8 @@ app.use("/product", productRouter);
 const orderRouter = require("./src/App/routes/order");
 //app.use("/user/:user_id", orderRouter);
 app.use("/order", orderRouter);
-// 8000포트로 서버 실행
+
+// 5000포트로 서버 실행
 app.listen(process.env.PORT, () => {
-  console.log("서버가 5000포트에서 실행중입니다");
+  console.log(`서버가 ${process.env.PORT}포트에서 실행중입니다`);
 });
