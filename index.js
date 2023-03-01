@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+const http = require("http");
 const app = express();
 const bodyParser = require("body-parser");
 
@@ -60,7 +61,10 @@ app.use("/product", productRouter);
 const orderRouter = require("./src/App/routes/order");
 //app.use("/user/:user_id", orderRouter);
 app.use("/order", orderRouter);
-// 8000포트로 서버 실행
-app.listen(process.env.PORT, () => {
+
+const server = http.createServer(app);
+
+// 5000포트로 서버 실행
+server.listen(process.env.PORT, "0.0.0.0", () => {
   console.log("서버가 5000포트에서 실행중입니다");
 });
