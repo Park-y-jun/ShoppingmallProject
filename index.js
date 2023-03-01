@@ -63,6 +63,6 @@ const orderRouter = require("./src/App/routes/order");
 app.use("/order", orderRouter);
 
 // 5000포트로 서버 실행
-server.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log(`서버가 ${process.env.PORT}포트에서 실행중입니다`);
 });
