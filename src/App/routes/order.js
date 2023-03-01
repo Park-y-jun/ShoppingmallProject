@@ -32,7 +32,7 @@ router.post("/order", async (req, res) => {
 // 배송신청하는 유저의 주문 정보
 router.get("/order/delivery", async (req, res) => {
   const { user_id } = req.params;
-  const products = await Product.find({ user_id: user_id });
+  const products = await Product.find({ user_id: user_id, paid: false }); // products들의 paid가 false인 것만 가져오기
   res.json(products);
 });
 // 주문에서 이어지는 새로운 배송신청
