@@ -6,7 +6,7 @@ const Delivery = require("../../DB/models/products/Delivery");
 const Product = require("../../DB/models/products/Product");
 const { findByIdAndUpdate } = require("../../DB/models/products/Order");
 //전체 주문 조회
-router.get("/order", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const orders = await Order.find();
     res.status(200).json(orders);
@@ -30,8 +30,16 @@ router.post("/", async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 });
+//////여기 까지만 업데이트 //////
+//사용자는 개인 페이지에서 자신의 주문 내역을 조회할 수 있다
+router.get("/user/:id", async (req, res) => {
+  const { id } = req.params;
+  const orders = await Order.find({ user: id });
+  res.json(orders);
+});
+
 // 배송신청하는 유저의 주문 정보
-router.get("/order/delivery", async (req, res) => {
+router.get("/delivery", async (req, res) => {
   const { user_id } = req.params;
   const products = await Product.find({ user_id: user_id, paid: false }); // products들의 paid가 false인 것만 가져오기
   res.json(products);
