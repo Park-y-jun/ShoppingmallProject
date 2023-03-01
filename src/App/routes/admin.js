@@ -4,7 +4,6 @@ const multer = require("multer");
 const router = express.Router();
 const Product = require("../../DB/models/products/Product");
 const Category = require("../../DB/models/products/Category");
-const ObjectId = mongoose.Types.ObjectId;
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -70,7 +69,7 @@ router.post("/product", upload.single("image"), async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
-      category: ObjectId(req.body.category),
+      category: req.body.category,
       image: {
         data: image.buffer,
         contentType: image.mimetype,
