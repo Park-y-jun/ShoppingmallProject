@@ -46,8 +46,11 @@ const userProfileRouter = require("./src/App/routes/users/profile");
 
 const adminRouter = require("./src/App/routes/admin");
 
+const guestRouter = require("./src/App/routes/users/guest");
+
 app.use("/userProfile", userProfileRouter);
 app.use("/admin", adminRouter);
+app.use("/guest", guestRouter);
 
 //제품
 const productRouter = require("./src/App/routes/product");
