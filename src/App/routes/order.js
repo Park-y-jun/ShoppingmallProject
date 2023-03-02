@@ -4,7 +4,7 @@ const router = express.Router();
 const Order = require("../../DB/models/products/Order");
 const Delivery = require("../../DB/models/products/Delivery");
 const Product = require("../../DB/models/products/Product");
-const { findByIdAndUpdate } = require("../../DB/models/products/Order");
+
 //전체 주문 조회
 router.get("/", async (req, res) => {
   try {

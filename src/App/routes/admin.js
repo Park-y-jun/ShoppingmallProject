@@ -23,19 +23,6 @@ router.use(bodyParser.urlencoded({ extended: true }));
 //   }
 // };
 
-// 이미지 업로드 설정
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/images");
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, `${file.fieldname}-${Date.now()}${ext}`);
-  },
-});
-
-// 업로드 미들웨어
-const upload = multer({ storage: storage });
 // const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // 리스트 가져오기
@@ -75,7 +62,37 @@ router.get("/product/:product_id", async (req, res) => {
   }
 });
 
+// 이미지 업로드 설정
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/images");
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, `${file.fieldname}-${Date.now()}${ext}`);
+  },
+});
+
+// 업로드 미들웨어
+const upload = multer({ storage: storage });
+
 //상품 등록
+router.post("/product", upload.single("image"), async (req, res) => {
+  const { name, description, price, category } = req.body;
+  const product = new Product({
+    name,
+    description,
+    price,
+    category,
+    image: req.file.filename,
+  });
+  await product.save();
+  if (!product) {
+    return res.status(500).send("상품을 저장할 수 없습니다.");
+  } else {
+    res.send(product);
+  }
+});
 // router.post("/product", upload.single("image"), async (req, res) => {
 //   try {
 //     const image = req.file;
@@ -96,22 +113,6 @@ router.get("/product/:product_id", async (req, res) => {
 //     res.status(400).json({ message: e.message });
 //   }
 // });
-router.post("/product", upload.single("image"), async (req, res) => {
-  const { name, description, price, category } = req.body;
-  const product = new Product({
-    name,
-    description,
-    price,
-    category,
-    image: req.file.filename,
-  });
-  await product.save();
-  if (!product) {
-    return res.status(500).send("상품을 저장할 수 없습니다.");
-  } else {
-    res.send(product);
-  }
-});
 
 //상품 수정
 router.put("/product/:product_id", upload.single("image"), async (req, res) => {

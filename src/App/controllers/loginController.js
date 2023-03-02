@@ -8,7 +8,7 @@ const AppError = require("../utils/AppError");
 
 const loginUser = tryCatch(async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email, deleted: false });
   if (user) {
     const comparePassword = await bcrypt.compare(password, user.password);
     if (comparePassword) {
