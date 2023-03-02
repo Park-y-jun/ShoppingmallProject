@@ -11,20 +11,32 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-// 이미지 업로드
-const storage = multer.memoryStorage();
+// // 이미지 업로드
+// const storage = multer.memoryStorage();
 
-// 업로드 파일 필터링
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb(new Error("이미지 파일만 올리세요"), false);
-  }
-};
+// // 업로드 파일 필터링
+// const fileFilter = (req, file, cb) => {
+//   if (file.mimetype.startsWith("image")) {
+//     cb(null, true);
+//   } else {
+//     cb(new Error("이미지 파일만 올리세요"), false);
+//   }
+// };
+
+// 이미지 업로드 설정
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/images");
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, `${file.fieldname}-${Date.now()}${ext}`);
+  },
+});
 
 // 업로드 미들웨어
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // 리스트 가져오기
 router.get("/product", async (req, res) => {
@@ -64,62 +76,66 @@ router.get("/product/:product_id", async (req, res) => {
 });
 
 //상품 등록
+// router.post("/product", upload.single("image"), async (req, res) => {
+//   try {
+//     const image = req.file;
+//     console.log(image);
+//     const product = new Product({
+//       name: req.body.name,
+//       description: req.body.description,
+//       price: req.body.price,
+//       category: req.body.category,
+//       image: {
+//         data: image.buffer,
+//         contentType: image.mimetype,
+//       },
+//     });
+//     await product.save();
+//     res.status(200).json({ message: "상품이 등록되었습니다." });
+//   } catch (e) {
+//     res.status(400).json({ message: e.message });
+//   }
+// });
 router.post("/product", upload.single("image"), async (req, res) => {
-  try {
-    const image = req.file;
-    console.log(image);
-    const product = new Product({
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      category: req.body.category,
-      image: {
-        data: image.buffer,
-        contentType: image.mimetype,
-      },
-    });
-    await product.save();
-    res.status(200).json({ message: "상품이 등록되었습니다." });
-  } catch (e) {
-    res.status(400).json({ message: e.message });
+  const { name, description, price, category } = req.body;
+  const product = new Product({
+    name,
+    description,
+    price,
+    category,
+    image: req.file.filename,
+  });
+  await product.save();
+  if (!product) {
+    return res.status(500).send("상품을 저장할 수 없습니다.");
+  } else {
+    res.send(product);
   }
 });
 
 //상품 수정
-router.post(
-  "/product/:product_id",
-  upload.single("image"),
-  async (req, res) => {
-    const { name, description, price, category } = req.body;
-
-    try {
-      // 업데이트할 제품 찾기
-      const product = await Product.findOne({
-        product_id: req.params.product_id,
-      });
-
-      // 이미지가 업로드된 경우 처리
-      if (req.file) {
-        product.image.data = req.file.buffer;
-        product.image.contentType = req.file.mimetype;
-      }
-
-      // 제품 정보 업데이트
-      product.name = name;
-      product.description = description;
-      product.price = price;
-      product.category = category;
-
-      // 제품 정보 저장
-      await product.save();
-
-      // 업데이트된 제품 반환
-      res.json(product);
-    } catch (e) {
-      res.status(400).json({ message: e.message });
-    }
+router.put("/product/:product_id", upload.single("image"), async (req, res) => {
+  const { name, description, price, category } = req.body;
+  const product_id = req.params.product_id;
+  const imagePath = req.file ? `/images/${req.file.filename}` : null;
+  try {
+    const product = await Product.findByIdAndUpdate(
+      product_id,
+      {
+        name,
+        description,
+        price,
+        category,
+        image: imagePath,
+      },
+      { new: true }
+    );
+    res.status(200).json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "서버 에러" });
   }
-);
+});
 
 router.post(
   "/product/:product_id",

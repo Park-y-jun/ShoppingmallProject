@@ -32,46 +32,46 @@ router.post("/", async (req, res) => {
 });
 //////여기 까지만 업데이트 //////
 //사용자는 개인 페이지에서 자신의 주문 내역을 조회할 수 있다
-router.get("/user/:id", async (req, res) => {
-  const { id } = req.params;
-  const orders = await Order.find({ user: id });
-  res.json(orders);
-});
+// router.get("/user/:id", async (req, res) => {
+//   const { id } = req.params;
+//   const orders = await Order.find({ user: id });
+//   res.json(orders);
+// });
 
-// 배송신청하는 유저의 주문 정보
-router.get("/delivery", async (req, res) => {
-  const { user_id } = req.params;
-  const products = await Product.find({ user_id: user_id, paid: false }); // products들의 paid가 false인 것만 가져오기
-  res.json(products);
-});
-// 주문에서 이어지는 새로운 배송신청
-router.post("/order/delivery", async (req, res) => {
-  const { order, address, contact, demand } = req.body;
-  try {
-    await Delivery.create({
-      order,
-      address,
-      contact,
-      demand,
-    });
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
-// 배송신청한 주문의 상태 변경
-router.put("/order/delivery/:delivery_id", async (req, res) => {
-  const { delivery_id } = req.params;
-  const { paid } = req.body;
-  try {
-    const updateProducts = await findByIdAndUpdate(
-      delivery_id,
-      { paid },
-      { new: true }
-    );
-    res.json(updateProducts);
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
+// // 배송신청하는 유저의 주문 정보
+// router.get("/delivery", async (req, res) => {
+//   const { user_id } = req.params;
+//   const products = await Product.find({ user_id: user_id, paid: false }); // products들의 paid가 false인 것만 가져오기
+//   res.json(products);
+// });
+// // 주문에서 이어지는 새로운 배송신청
+// router.post("/order/delivery", async (req, res) => {
+//   const { order, address, contact, demand } = req.body;
+//   try {
+//     await Delivery.create({
+//       order,
+//       address,
+//       contact,
+//       demand,
+//     });
+//   } catch (e) {
+//     res.status(400).json({ message: e.message });
+//   }
+// });
+// // 배송신청한 주문의 상태 변경
+// router.put("/order/delivery/:delivery_id", async (req, res) => {
+//   const { delivery_id } = req.params;
+//   const { paid } = req.body;
+//   try {
+//     const updateProducts = await findByIdAndUpdate(
+//       delivery_id,
+//       { paid },
+//       { new: true }
+//     );
+//     res.json(updateProducts);
+//   } catch (e) {
+//     res.status(400).json({ message: e.message });
+//   }
+// });
 
 module.exports = router;
