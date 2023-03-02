@@ -25,6 +25,13 @@ const loginUser = tryCatch(async (req, res) => {
       // });
       res.status(200).json({
         token,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          isAdmin: user.role === 0 ? false : true,
+        },
       });
     } else {
       throw new AppError("비밀번호가 일치하지 않습니다.", 401);
