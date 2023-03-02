@@ -1,14 +1,12 @@
 const express = require("express");
-const mongoose = require("mongoose");
+
 const multer = require("multer");
+const path = require("path");
 const router = express.Router();
 const Product = require("../../DB/models/products/Product");
 const Category = require("../../DB/models/products/Category");
-<<<<<<< HEAD
-=======
 const Order = require("../../DB/models/products/Order");
-const ObjectId = mongoose.Types.ObjectId;
->>>>>>> c53f673a853b35a634429e414b25fa15a5aaf041
+
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
