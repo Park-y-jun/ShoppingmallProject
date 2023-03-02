@@ -16,46 +16,42 @@ router.get("/", async (req, res) => {
 });
 
 // 새로운 주문 생성 API
-router.post("/", async (req, res) => {
-  try {
-    const { userId, products } = req.body;
-
-    const newOrder = new Order({
-      user: userId,
-      products: products.map((product) => ({
-        product: product.productId,
-        quantity: product.quantity,
-        price: product.price,
-      })),
-    });
-
-    const savedOrder = await newOrder.save();
-    res.status(201).json(savedOrder);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "주문 등록에 실패했습니다." });
-  }
-});
-
-module.exports = router;
-
-module.exports = router;
-
 // router.post("/", async (req, res) => {
-//   const { user, product, quantity, price } = req.body;
 //   try {
-//     await Order.create({
-//       user,
-//       product,
-//       quantity,
-//       price,
+//     const { userId, products } = req.body;
+
+//     const newOrder = new Order({
+//       user: userId,
+//       products: products.map((product) => ({
+//         product: product.productId,
+//         quantity: product.quantity,
+//         price: product.price,
+//       })),
 //     });
-//     // res.redirect("/order/delivery");
-//     res.status(201).json({ message: "주문이 완료되었습니다." });
-//   } catch (e) {
-//     res.status(400).json({ message: e.message });
+
+//     const savedOrder = await newOrder.save();
+//     res.status(201).json(savedOrder);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "주문 등록에 실패했습니다." });
 //   }
 // });
+
+router.post("/", async (req, res) => {
+  const { user, product, quantity, price } = req.body;
+  try {
+    await Order.create({
+      user,
+      product,
+      quantity,
+      price,
+    });
+    // res.redirect("/order/delivery");
+    res.status(201).json({ message: "주문이 완료되었습니다." });
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+});
 //////여기 까지만 업데이트 //////
 //사용자는 개인 페이지에서 자신의 주문 내역을 조회할 수 있다
 // router.get("/user/:id", async (req, res) => {
