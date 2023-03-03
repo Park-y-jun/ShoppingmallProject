@@ -6,61 +6,46 @@ const router = express.Router();
 const Product = require("../../DB/models/products/Product");
 const Category = require("../../DB/models/products/Category");
 const Order = require("../../DB/models/products/Order");
-
-const bodyParser = require("body-parser");
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
-
-// // 이미지 업로드
-// const storage = multer.memoryStorage();
-
-// // 업로드 파일 필터링
-// const fileFilter = (req, file, cb) => {
-//   if (file.mimetype.startsWith("image")) {
-//     cb(null, true);
-//   } else {
-//     cb(new Error("이미지 파일만 올리세요"), false);
-//   }
-// };
-
-// const upload = multer({ storage: storage, fileFilter: fileFilter });
+const tryCatch = require("../utils/tryCatch");
 
 // 리스트 가져오기
-router.get("/product", async (req, res) => {
-  try {
+router.get(
+  "/product",
+  tryCatch(async (req, res) => {
     const products = await Product.find();
     res.status(200).json(products);
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
+  })
+);
 
 // 상품 조회
-router.get("/product/:product_id", async (req, res) => {
-  try {
-    const product = await Product.findOne({
-      product_id: req.params.product_id,
-    });
-    if (!product) {
-      res.status(404).json({ message: "상품이 없습니다." });
-    }
-    const base64Image = Buffer.from(product.image.data).toString("base64");
+router.get(
+  "/product/:product_id",
+  tryCatch(async (req, res) => {
+    try {
+      const product = await Product.findOne({
+        product_id: req.params.product_id,
+      });
+      if (!product) {
+        res.status(404).json({ message: "상품이 없습니다." });
+      }
+      const base64Image = Buffer.from(product.image.data).toString("base64");
 
-    res.status(200).json({
-      id: product._id,
-      name: product.name,
-      image: {
-        data: base64Image,
-        contentType: product.image.contentType,
-      },
-      description: product.description,
-      price: product.price,
-      category: product.category,
-    });
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
+      res.status(200).json({
+        id: product._id,
+        name: product.name,
+        image: {
+          data: base64Image,
+          contentType: product.image.contentType,
+        },
+        description: product.description,
+        price: product.price,
+        category: product.category,
+      });
+    } catch (e) {
+      res.status(400).json({ message: e.message });
+    }
+  })
+);
 
 // 이미지 업로드 설정
 const storage = multer.diskStorage({
@@ -77,71 +62,59 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //상품 등록
-router.post("/product", upload.single("image"), async (req, res) => {
-  const { name, description, price, category } = req.body;
-  const product = new Product({
-    name,
-    description,
-    price,
-    category,
-    image: req.file.filename,
-  });
-  await product.save();
-  if (!product) {
-    return res.status(500).send("상품을 저장할 수 없습니다.");
-  } else {
-    res.send(product);
-  }
-});
-// router.post("/product", upload.single("image"), async (req, res) => {
-//   try {
-//     const image = req.file;
-//     console.log(image);
-//     const product = new Product({
-//       name: req.body.name,
-//       description: req.body.description,
-//       price: req.body.price,
-//       category: req.body.category,
-//       image: {
-//         data: image.buffer,
-//         contentType: image.mimetype,
-//       },
-//     });
-//     await product.save();
-//     res.status(200).json({ message: "상품이 등록되었습니다." });
-//   } catch (e) {
-//     res.status(400).json({ message: e.message });
-//   }
-// });
+router.post(
+  "/product",
+  upload.single("image"),
+  tryCatch(async (req, res) => {
+    const { name, description, price, category } = req.body;
+    const product = new Product({
+      name,
+      description,
+      price,
+      category,
+      image: req.file.filename,
+    });
+    await product.save();
+    if (!product) {
+      return res.status(500).send("상품을 저장할 수 없습니다.");
+    } else {
+      res.send(product);
+    }
+  })
+);
 
 //상품 수정
-router.put("/product/:product_id", upload.single("image"), async (req, res) => {
-  const { name, description, price, category } = req.body;
-  const product_id = req.params.product_id;
-  const imagePath = req.file ? `/images/${req.file.filename}` : null;
-  try {
-    const product = await Product.findByIdAndUpdate(
-      product_id,
-      {
-        name,
-        description,
-        price,
-        category,
-        image: imagePath,
-      },
-      { new: true }
-    );
-    res.status(200).json(product);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "서버 에러" });
-  }
-});
+router.put(
+  "/product/:product_id",
+  upload.single("image"),
+  tryCatch(async (req, res) => {
+    const { name, description, price, category } = req.body;
+    const product_id = req.params.product_id;
+    const imagePath = req.file ? `/images/${req.file.filename}` : null;
+    try {
+      const product = await Product.findByIdAndUpdate(
+        product_id,
+        {
+          name,
+          description,
+          price,
+          category,
+          image: imagePath,
+        },
+        { new: true }
+      );
+      res.status(200).json(product);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "서버 에러" });
+    }
+  })
+);
 
 router.post(
   "/product/:product_id",
   upload.single("image"),
-  async (req, res) => {
+  tryCatch(async (req, res) => {
     const { name, description, price, category } = req.body;
 
     try {
@@ -170,80 +143,101 @@ router.post(
     } catch (e) {
       res.status(400).json({ message: e.message });
     }
-  }
+  })
 );
 
 // 상품삭제
-router.delete("/product/:product_id", async (req, res) => {
-  const { product_id } = req.params;
-  await Product.deleteOne({ product_id: product_id });
-  res.send("OK");
-});
-router.get("/product", async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.status(200).json(products);
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
+router.delete(
+  "/product/:product_id",
+  tryCatch(async (req, res) => {
+    const { product_id } = req.params;
+    await Product.deleteOne({ product_id: product_id });
+    res.send("OK");
+  })
+);
+router.get(
+  "/product",
+  tryCatch(async (req, res) => {
+    try {
+      const products = await Product.find();
+      res.status(200).json(products);
+    } catch (e) {
+      res.status(400).json({ message: e.message });
+    }
+  })
+);
 
 //카테고리 리스트 조회
-router.get("/category", async (req, res) => {
-  try {
-    const categories = await Category.find();
-    res.status(200).json(categories);
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
+router.get(
+  "/category",
+  tryCatch(async (req, res) => {
+    try {
+      const categories = await Category.find();
+      res.status(200).json(categories);
+    } catch (e) {
+      res.status(400).json({ message: e.message });
+    }
+  })
+);
 
 //카테고리 추가
-router.post("/category", async (req, res) => {
-  try {
-    const category = new Category({
-      category: req.body.category,
-    });
-    await category.save();
-    res.status(200).json({ message: "카테고리가 추가되었습니다." });
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
+router.post(
+  "/category",
+  tryCatch(async (req, res) => {
+    try {
+      const category = new Category({
+        category: req.body.category,
+      });
+      await category.save();
+      res.status(200).json({ message: "카테고리가 추가되었습니다." });
+    } catch (e) {
+      res.status(400).json({ message: e.message });
+    }
+  })
+);
 
 //카테고리 수정
-router.post("/category/:category", async (req, res) => {
-  const { category } = req.params;
-  const name = req.body.category;
-  try {
-    const updateCategory = await Category.findOne({
-      category: category,
-    });
-    updateCategory.category = name;
-    await updateCategory.save();
-    // res.send(updateCategory);
-    res.status(200).json({ message: "카테고리가 수정되었습니다." });
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
+router.post(
+  "/category/:category",
+  tryCatch(async (req, res) => {
+    const { category } = req.params;
+    const name = req.body.category;
+    try {
+      const updateCategory = await Category.findOne({
+        category: category,
+      });
+      updateCategory.category = name;
+      await updateCategory.save();
+      // res.send(updateCategory);
+      res.status(200).json({ message: "카테고리가 수정되었습니다." });
+    } catch (e) {
+      res.status(400).json({ message: e.message });
+    }
+  })
+);
 
 //카테고리 삭제
-router.delete("/category/:category", async (req, res) => {
-  const { category } = req.params;
-  await Category.deleteOne({ category: category });
-  res.send("DELETE");
-});
+router.delete(
+  "/category/:category",
+  tryCatch(async (req, res) => {
+    const { category } = req.params;
+    await Category.deleteOne({ category: category });
+    res.send("DELETE");
+  })
+);
 
 // 관리자 주문 조회
 
-router.get("/order", async (req, res) => {
-  try {
-    const orders = await Order.find();
-    res.status(200).json(orders);
-  } catch (e) {
-    res.status(400).json({ message: e.message });
-  }
-});
+router.get(
+  "/order",
+  tryCatch(async (req, res) => {
+    try {
+      const orders = await Order.find();
+      res.status(200).json(orders);
+    } catch (e) {
+      res.status(400).json({ message: e.message });
+    }
+  })
+);
 
 module.exports = router;

@@ -4,6 +4,11 @@ const express = require("express");
 
 const app = express();
 const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const errorHandler = require("./src/App/middleware/errorHandler");
+
+app.use(morgan("dev"));
+app.use(errorHandler);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -1,13 +1,9 @@
 const express = require("express");
 const userController = require("../../controllers/userController");
 const router = express.Router();
-const authToken = require("../../middleware/auth");
 
-const bodyParser = require("body-parser");
 const errorHandler = require("../../middleware/errorHandler");
 
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
 router.use(errorHandler);
 // /userProfile
 router.get("/", userController.allUser);
